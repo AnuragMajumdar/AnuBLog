@@ -12,5 +12,7 @@ class Comment(models.Model):
 
     class Meta:
         app_label = 'comments'
-        db_table = 'comments"."comment'
+        db_table = 'comment'  # No schema reference here
+
+# This is a comment to force detection
 
