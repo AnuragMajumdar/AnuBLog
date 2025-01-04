@@ -11,6 +11,7 @@ services:
       POSTGRES_DB: blog_db
     ports:
       - "5432:5432"
+    restart: always
 
   migration:
     build:
@@ -23,8 +24,10 @@ services:
     working_dir: /app
     depends_on:
       - db
+    entrypoint: ["/usr/bin/tini", "--"]
     command: >
       sh -c "python manage.py migrate"
+    restart: "on-failure"
 
   users:
     build:
@@ -40,8 +43,10 @@ services:
     depends_on:
       - db
       - migration
+    entrypoint: ["/usr/bin/tini", "--"]
     command: >
       sh -c "python manage.py runserver 0.0.0.0:8000"
+    restart: "on-failure"
 
   blogs:
     build:
@@ -57,8 +62,10 @@ services:
     depends_on:
       - db
       - migration
+    entrypoint: ["/usr/bin/tini", "--"]
     command: >
       sh -c "python manage.py runserver 0.0.0.0:8000"
+    restart: "on-failure"
 
   comments:
     build:
@@ -74,8 +81,10 @@ services:
     depends_on:
       - db
       - migration
+    entrypoint: ["/usr/bin/tini", "--"]
     command: >
       sh -c "python manage.py runserver 0.0.0.0:8000"
+    restart: "on-failure"
 
 volumes:
   postgres_data:
