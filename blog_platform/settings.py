@@ -3,9 +3,12 @@ from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
+# Load environment variables based on ENV_FILE parameter
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(os.path.join(BASE_DIR, '.env.development'))
+
+# Default to '.env.development' if ENV_FILE is not provided
+env_file = os.getenv('ENV_FILE', '.env.development')
+load_dotenv(os.path.join(BASE_DIR, env_file))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'default-secret-key')

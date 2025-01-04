@@ -6,7 +6,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
-      - .env.development
+      - ${ENV_FILE:-.env.development}  # Dynamically load env file based on ENV_FILE
     ports:
       - "5432:5432"
     restart: always
@@ -16,7 +16,7 @@ services:
       context: ./users
       dockerfile: Dockerfile
     env_file:
-      - .env.development
+      - ${ENV_FILE:-.env.development}  # Dynamically load env file based on ENV_FILE
     volumes:
       - .:/app
     working_dir: /app
@@ -27,7 +27,6 @@ services:
       sh -c "./wait-for-it.sh db:5432 -- python manage.py migrate"
     restart: "on-failure"
 
-
   users:
     build:
       context: ./users
@@ -35,7 +34,7 @@ services:
     ports:
       - "8000:8000"
     env_file:
-      - .env.development
+      - ${ENV_FILE:-.env.development}  # Dynamically load env file based on ENV_FILE
     volumes:
       - .:/app
     working_dir: /app
@@ -54,7 +53,7 @@ services:
     ports:
       - "8001:8000"
     env_file:
-      - .env.development
+      - ${ENV_FILE:-.env.development}  # Dynamically load env file based on ENV_FILE
     volumes:
       - .:/app
     working_dir: /app
@@ -73,7 +72,7 @@ services:
     ports:
       - "8002:8000"
     env_file:
-      - .env.development
+      - ${ENV_FILE:-.env.development}  # Dynamically load env file based on ENV_FILE
     volumes:
       - .:/app
     working_dir: /app
