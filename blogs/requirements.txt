@@ -7,3 +7,5 @@ sqlparse==0.5.3
 asgiref==3.8.1
 PyJWT==2.10.1
 typing-extensions==4.12.2
+
+python-dotenv~=1.0.1
