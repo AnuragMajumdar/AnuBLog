@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="card mb-4">
+      <div class="card-body">
+          <h1 class="card-title">{{ blog.title }}</h1>
+          <p class="card-text">{{ blog.content }}</p>
+          <p class="card-text"><small class="text-muted">By {{ blog.author }} | {{ blog.created_at|date:"F d, Y" }}</small></p>
+          {% if user == blog.author %}
+              <a href="{% url 'blog_edit' blog.pk %}" class="btn btn-primary">Edit</a>
+              <a href="{% url 'blog_delete' blog.pk %}" class="btn btn-danger">Delete</a>
+          {% endif %}
+      </div>
+  </div>
+
+  <h2>Comments</h2>
+  {% for comment in blog.comments.all %}
+      <div class="card mb-2">
+          <div class="card-body">
+              <p class="card-text">{{ comment.content }}</p>
+              <p class="card-text"><small class="text-muted">By {{ comment.author }} | {{ comment.created_at|date:"F d, Y" }}</small></p>
+          </div>
+      </div>
+  {% empty %}
+      <p>No comments yet.</p>
+  {% endfor %}
+
+  {% if user.is_authenticated %}
+      <h3>Add a comment</h3>
+      <form method="post" action="{% url 'add_comment' blog.pk %}">
+          {% csrf_token %}
+          {{ comment_form.as_p }}
+          <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+  {% else %}
+      <p>Please <a href="{% url 'login' %}">log in</a> to add a comment.</p>
+  {% endif %}
+{% endblock content %}
+
