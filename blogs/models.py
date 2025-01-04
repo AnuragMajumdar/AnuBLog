@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 User = get_user_model()
 
@@ -13,6 +14,8 @@ class Blog(models.Model):
     class Meta:
         db_table = 'blog'  # This sets the table name to 'blog' without the schema
 
-    def __str__(self):
+    def _str_(self):
         return self.title
 
+    def get_absolute_url(self):
+        return reverse('blog_detail', kwargs={'pk': self.pk})

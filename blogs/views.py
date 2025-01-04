@@ -2,7 +2,6 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from .models import Blog
-from comments.forms import CommentForm
 
 class HomeView(ListView):
     model = Blog
@@ -22,11 +21,6 @@ class BlogDetailView(DetailView):
     model = Blog
     template_name = 'blog_detail.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['comment_form'] = CommentForm()
-        return context
-
 class BlogCreateView(LoginRequiredMixin, CreateView):
     model = Blog
     template_name = 'blog_new.html'
@@ -41,10 +35,14 @@ class BlogUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Blog
     template_name = 'blog_edit.html'
     fields = ['title', 'content']
+    success_url = reverse_lazy('blog_detail')
 
     def test_func(self):
         obj = self.get_object()
         return obj.author == self.request.user
+
+    def get_success_url(self):
+        return reverse_lazy('blog_detail', kwargs={'pk': self.object.pk})
 
 class BlogDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Blog
@@ -54,4 +52,3 @@ class BlogDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         obj = self.get_object()
         return obj.author == self.request.user
-
